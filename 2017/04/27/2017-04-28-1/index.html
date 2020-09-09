@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000">
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top">
+  
+  
+  <title>Nginx 限流 | Webwlsong`s Blog</title>
+  <meta name="description" content="电商平台营销时候，经常会碰到的大流量问题, 除了做流量分流处理，可能还要做用户黑白名单、信誉分析，进而根据用户ip信誉权重做相应的流量拦截、限制流量。Nginx自身有的请求限制模块ngx_http_limit_req_module、流量限制模块ngx_stream_limit_conn_module基于令牌桶算法，可以方便的控制令牌速率，自定义调节限流，实现基本的限流控制。 对于提供下载的网站，肯">
+<meta name="keywords" content="nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx 限流">
+<meta property="og:url" content="https://webwlsong.github.io/2017/04/27/2017-04-28-1/index.html">
+<meta property="og:site_name" content="webwlsong">
+<meta property="og:description" content="电商平台营销时候，经常会碰到的大流量问题, 除了做流量分流处理，可能还要做用户黑白名单、信誉分析，进而根据用户ip信誉权重做相应的流量拦截、限制流量。Nginx自身有的请求限制模块ngx_http_limit_req_module、流量限制模块ngx_stream_limit_conn_module基于令牌桶算法，可以方便的控制令牌速率，自定义调节限流，实现基本的限流控制。 对于提供下载的网站，肯">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-09-09T11:15:36.129Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nginx 限流">
+<meta name="twitter:description" content="电商平台营销时候，经常会碰到的大流量问题, 除了做流量分流处理，可能还要做用户黑白名单、信誉分析，进而根据用户ip信誉权重做相应的流量拦截、限制流量。Nginx自身有的请求限制模块ngx_http_limit_req_module、流量限制模块ngx_stream_limit_conn_module基于令牌桶算法，可以方便的控制令牌速率，自定义调节限流，实现基本的限流控制。 对于提供下载的网站，肯">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://webwlsong.github.io/2017/04/27/2017-04-28-1/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="webwlsong" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="https://webwlsong-1301722012.cos.ap-shanghai.myqcloud.com/mweb/2020/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  
+  
+</head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/webwlsong" target="_blank">
+          <img class="img-circle img-rotate" src="https://static01.imgkr.com/temp/e857da9acde846d4a09582984209f398.png" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">webwlsong</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> ShangHai, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/webwlsong" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/webwlsong" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/webwlsong" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/webwlsong" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/test/">test</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/delve/">delve</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fira-code/">fira code</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/frp/">frp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/">gitlab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/">golang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jetbrains/">jetbrains</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongo/">mongo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/">nginx</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/operator-mono/">operator mono</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php-jit/">php-jit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php-mongo/">php-mongo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpstrom/">phpstrom</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pure/">pure</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swoole/">swoole</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp/">tcp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test/">test</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/">ubuntu</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内存/">内存</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内网穿透/">内网穿透</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/堆栈/">堆栈</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能测试/">性能测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/架构/">架构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/树莓派/">树莓派</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/c/" style="font-size: 13px;">c</a> <a href="/tags/c/" style="font-size: 13px;">c++</a> <a href="/tags/delve/" style="font-size: 13px;">delve</a> <a href="/tags/docker/" style="font-size: 13.5px;">docker</a> <a href="/tags/fira-code/" style="font-size: 13px;">fira code</a> <a href="/tags/frp/" style="font-size: 13px;">frp</a> <a href="/tags/gitlab/" style="font-size: 13px;">gitlab</a> <a href="/tags/go/" style="font-size: 14px;">go</a> <a href="/tags/golang/" style="font-size: 13px;">golang</a> <a href="/tags/hexo/" style="font-size: 13px;">hexo</a> <a href="/tags/jetbrains/" style="font-size: 13px;">jetbrains</a> <a href="/tags/linux/" style="font-size: 13.5px;">linux</a> <a href="/tags/mongo/" style="font-size: 13px;">mongo</a> <a href="/tags/nginx/" style="font-size: 14px;">nginx</a> <a href="/tags/nodejs/" style="font-size: 13px;">nodejs</a> <a href="/tags/operator-mono/" style="font-size: 13px;">operator mono</a> <a href="/tags/php/" style="font-size: 13.5px;">php</a> <a href="/tags/php-jit/" style="font-size: 13px;">php-jit</a> <a href="/tags/php-mongo/" style="font-size: 13px;">php-mongo</a> <a href="/tags/phpstrom/" style="font-size: 13px;">phpstrom</a> <a href="/tags/pure/" style="font-size: 13px;">pure</a> <a href="/tags/swoole/" style="font-size: 13px;">swoole</a> <a href="/tags/tcp/" style="font-size: 13px;">tcp</a> <a href="/tags/test/" style="font-size: 13px;">test</a> <a href="/tags/ubuntu/" style="font-size: 14px;">ubuntu</a> <a href="/tags/内存/" style="font-size: 13px;">内存</a> <a href="/tags/内网穿透/" style="font-size: 13px;">内网穿透</a> <a href="/tags/堆栈/" style="font-size: 13px;">堆栈</a> <a href="/tags/性能测试/" style="font-size: 13px;">性能测试</a> <a href="/tags/架构/" style="font-size: 13px;">架构</a> <a href="/tags/树莓派/" style="font-size: 13px;">树莓派</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/20202/09/">九月 20202</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/test/">test</a>
+              </p>
+              <p class="item-title">
+                <a href="/20202/09/08/2020/2020-09/2020-09-09/" class="title">test</a>
+              </p>
+              <p class="item-date">
+                <time datetime="+020202-09-08T16:00:00.000Z" itemprop="datePublished">20202-09-09</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/20202/09/06/2020/2020-09/2020-09-07/" class="title">Mac用串口(ttl)连接树莓派3b+以及串口调试</a>
+              </p>
+              <p class="item-date">
+                <time datetime="+020202-09-06T16:00:00.000Z" itemprop="datePublished">20202-09-07</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/02/2020/2020-09/2020-09-02/" class="title">图解Golang的内存管理分配</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-02T16:00:00.000Z" itemprop="datePublished">2020-09-03</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/08/31/2020/2020-08/2020-08-31/" class="title">DIY服务器搭建，内网穿透搭建</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-08-31T09:09:00.000Z" itemprop="datePublished">2020-08-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/08/30/2020/2020-08/2020-08-30-1/" class="title">Ubuntu20.04.1关闭图形界面，使用tty登陆</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-08-30T03:08:00.000Z" itemprop="datePublished">2020-08-30</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-2017-04-28-1" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Nginx 限流
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2017/04/27/2017-04-28-1/" class="article-date">
+	  <time datetime="2017-04-27T16:00:00.000Z" itemprop="datePublished">2017-04-28</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/nginx/">nginx</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2017/04/27/2017-04-28-1/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>电商平台营销时候，经常会碰到的大流量问题,<br>
+除了做流量分流处理，可能还要做用户黑白名单、信誉分析，进而根据用户ip信誉权重做相应的流量拦截、限制流量。Nginx自身有的请求限制模块ngx_http_limit_req_module、流量限制模块ngx_stream_limit_conn_module基于令牌桶算法，可以方便的控制令牌速率，自定义调节限流，实现基本的限流控制。</p>
+<p>对于提供下载的网站，肯定是要进行流量控制的，例如软件下载站、视频服务等。它也可以减少一些爬虫程序或者DDOS的攻击。</p>
+<p>对这两个模块的介绍的文章也不少，这里转载一篇hopestar的文章: nginx限制IP连接数的范例参考， 因为他介绍的很简洁。</p>
+<blockquote>
+<p>如何Nginx限制同一个ip的连接数，限制并发数目:</p>
+</blockquote>
+<h2 id="1-限流"><a class="markdownIt-Anchor" href="#1-限流"></a> 1. 限流</h2>
+<ul>
+<li>添加limit_zone和limit_req_zone;<br>
+这个变量只能在http使用 :</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vi /export/servers/nginx/conf/nginx.conf </span><br><span class="line">limit_zone one  <span class="variable">$binary_remote_addr</span>  <span class="number">20</span>m;</span><br><span class="line">limit_req_zone  <span class="variable">$binary_remote_addr</span>  zone=req_one:<span class="number">20</span>m rate=<span class="number">12</span>r/s;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>添加limit_conn 和limit_req</li>
+</ul>
+<p>这个变量可以在<code>http</code>, <code>server</code>, <code>location</code>使用 我是限制nginx上的所有服务，所以添加到http里面 （如果你需要限制部分服务，可在nginx/conf/domains里面选择相应的server或者location添加上便可）</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vi /export/servers/nginx/conf/nginx.conf </span><br><span class="line">limit_zone one <span class="variable">$binary_remote_addr</span> <span class="number">20</span>m;</span><br><span class="line">limit_req_zone <span class="variable">$binary_remote_addr</span> zone=req_one:<span class="number">20</span>m rate=<span class="number">12</span>r/s;</span><br><span class="line">limit_conn one <span class="number">10</span>;</span><br><span class="line">limit_req zone=req_one burst=<span class="number">120</span>;</span><br></pre></td></tr></table></figure>
+<p>参数详解(数值按具体需要和服务器承载能力设置,):</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">limit_zone，是针对每个变量(这里指IP，即<span class="variable">$binary_remote_addr</span>)定义一个存储session状态的容器。  </span><br><span class="line">            这个示例中定义了一个<span class="number">20</span>m的容器，按照<span class="number">32</span>bytes/session，  </span><br><span class="line">            可以处理<span class="number">640000</span>个session。 </span><br><span class="line">limit_req_zone 与limit_zone类似。rate是请求频率. 每秒允许<span class="number">12</span>个请求。</span><br><span class="line">limit_conn  one <span class="number">10</span> : 表示一个IP能发起<span class="number">10</span>个并发连接数</span><br><span class="line">limit_req: 与limit_req_zone对应。burst表示缓存住的请求数。</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">http</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attribute">limit_zone</span> one  <span class="variable">$binary_remote_addr</span>  <span class="number">20m</span>;</span><br><span class="line">    <span class="attribute">limit_req_zone</span>  <span class="variable">$binary_remote_addr</span>  zone=req_one:<span class="number">20m</span> rate=12r/s;</span><br><span class="line">    <span class="attribute">limit_conn</span>   one  <span class="number">10</span>;</span><br><span class="line">    <span class="attribute">limit_req</span>   zone=req_one burst=<span class="number">120</span>;</span><br><span class="line">    <span class="section">server</span>  &#123;</span><br><span class="line">        <span class="attribute">listen</span>          <span class="number">80</span>;</span><br><span class="line">        <span class="attribute">server_name</span>     status.xxx.com ;</span><br><span class="line">        <span class="attribute">location</span> / &#123;</span><br><span class="line">                 <span class="attribute">stub_status</span>            <span class="literal">on</span>;</span><br><span class="line">                 <span class="attribute">access_log</span>             <span class="literal">off</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重启nginx</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/export/servers/nginx/sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<h2 id="2-nginx白名单设置"><a class="markdownIt-Anchor" href="#2-nginx白名单设置"></a> 2. nginx白名单设置</h2>
+<p>以上配置会对所有的ip都进行限制，有些时候我们不希望对搜索引擎的蜘蛛或者某些自己的代理机过来的请求进行限制， 对于特定的白名单ip我们可以借助geo指令实现。</p>
+<p>先在nginx的请求日志进行统计，查看那个ip的访问量比较大， 运行:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cat</span> access.<span class="built_in">log</span> | <span class="keyword">grep</span> <span class="string">"03/Jun"</span> |awk <span class="string">'&#123;print $1&#125;'</span>|<span class="keyword">sort</span> |uniq -<span class="keyword">c</span>|<span class="keyword">sort</span> -nrk <span class="number">1</span>|head -n <span class="number">10</span></span><br><span class="line">#列出访问日志里面在<span class="number">6</span>月<span class="number">3</span>号这天前<span class="number">10</span>个访问量最大的ip.</span><br></pre></td></tr></table></figure>
+<p>接下来就可以对这些IP进行分析了。看哪些需要进行白名单设置。</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">http</span><br><span class="line">&#123;</span><br><span class="line">    <span class="attribute">geo</span>  <span class="variable">$limited</span>  &#123; <span class="comment"># the variable created is $limited</span></span><br><span class="line">        <span class="attribute">default</span>          <span class="number">1</span>;</span><br><span class="line">        127.0.0.1/32     0;</span><br><span class="line">        10.12.212.63     0;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="attribute">map</span> <span class="variable">$limited</span> <span class="variable">$limit</span> &#123;</span><br><span class="line">        1 $binary_remote_addr;</span><br><span class="line">        0 "";</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="attribute">limit_zone</span> one  <span class="variable">$binary_remote_addr</span>  <span class="number">20m</span>;</span><br><span class="line">    <span class="attribute">limit_req_zone</span>  <span class="variable">$limit</span>  zone=req_one:<span class="number">20m</span> rate=20r/s;</span><br><span class="line">    <span class="attribute">limit_conn</span>   one  <span class="number">10</span>;</span><br><span class="line">    <span class="attribute">limit_req</span>   zone=req_one burst=<span class="number">120</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面两个需要用到map和geo模块，这是nginx自带的模块，有的运维喜欢把他们关闭，自己<code>./sbin/nginx -V</code> 留意一下。把配置的<code>--whithout-XXX-module</code>去掉重新编译一下就可以了。 上面这段配置的意思是：</p>
+<p>geo指令定义了一个白名单<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>l</mi><mi>i</mi><mi>m</mi><mi>i</mi><mi>t</mi><mi>e</mi><mi>d</mi><mi mathvariant="normal">变</mi><mi mathvariant="normal">量</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">默</mi><mi mathvariant="normal">认</mi><mi mathvariant="normal">值</mi><mi mathvariant="normal">为</mi><mn>1</mn><mi mathvariant="normal">，</mi><mi mathvariant="normal">如</mi><mi mathvariant="normal">果</mi><mi mathvariant="normal">客</mi><mi mathvariant="normal">户</mi><mi mathvariant="normal">端</mi><mi>i</mi><mi>p</mi><mi mathvariant="normal">在</mi><mi mathvariant="normal">上</mi><mi mathvariant="normal">面</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">范</mi><mi mathvariant="normal">围</mi><mi mathvariant="normal">内</mi><mi mathvariant="normal">，</mi></mrow><annotation encoding="application/x-tex">limited变量，默认值为1，如果客户端ip在上面的范围内，</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">i</span><span class="mord mathdefault">m</span><span class="mord mathdefault">i</span><span class="mord mathdefault">t</span><span class="mord mathdefault">e</span><span class="mord mathdefault">d</span><span class="mord cjk_fallback">变</span><span class="mord cjk_fallback">量</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">默</span><span class="mord cjk_fallback">认</span><span class="mord cjk_fallback">值</span><span class="mord cjk_fallback">为</span><span class="mord">1</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">如</span><span class="mord cjk_fallback">果</span><span class="mord cjk_fallback">客</span><span class="mord cjk_fallback">户</span><span class="mord cjk_fallback">端</span><span class="mord mathdefault">i</span><span class="mord mathdefault">p</span><span class="mord cjk_fallback">在</span><span class="mord cjk_fallback">上</span><span class="mord cjk_fallback">面</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">范</span><span class="mord cjk_fallback">围</span><span class="mord cjk_fallback">内</span><span class="mord cjk_fallback">，</span></span></span></span>limited的值为0<br>
+使用map指令映射搜索引擎客户端的ip为空串，如果不是搜索引擎就显示本身真实的ip，这样搜索引擎ip就不能存到limit_req_zone内存session中，所以不会限制搜索引擎的ip访问</p>
+<h2 id="3-获取客户端的真实ip"><a class="markdownIt-Anchor" href="#3-获取客户端的真实ip"></a> 3. 获取客户端的真实IP</h2>
+<p>顺带一提，为了获取客户端的真实IP。该模块需要安装read_ip模块，运维应该默认有安装。没有的话也可自行安装： 配置方式相当简单，重新编译 Nginx 加上 --with-http_realip_module 参数，如：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure -<span class="literal">-prefix</span>=/opt/nginx -<span class="literal">-with</span><span class="literal">-http_stub_status_module</span>  -<span class="literal">-with</span><span class="literal">-pcre</span>=../pcre<span class="literal">-6</span>.<span class="number">6</span> -<span class="literal">-with</span><span class="literal">-http_realip_module</span></span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>在server中增加:</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">set_real_ip_from</span>   <span class="number">192.168.1.0</span>/<span class="number">24</span>;</span><br><span class="line"><span class="attribute">set_real_ip_from</span>   <span class="number">192.168.2.1</span>;</span><br><span class="line"><span class="attribute">real_ip_header</span>     [X-Real-IP|X-Forwarded-For];</span><br></pre></td></tr></table></figure>
+<p>需要说明的地方就是设置IP源的时候可以设置单个IP，也可以设置IP段，另外是使用X-Real-IP还是X-Forwarded-For，取决于前面的服务器有哪个头。</p>
+<p>set_real_ip_from 设置的IP端可以让运维查看日志，看下你的请求是来自哪些ip段。</p>
+<p>重新加载一下服务，差不多就OK了。</p>
+<p>再查看日志的话，应该可以看到客户端的真实IP了。</p>
+<p>注意：如果未安装该模块的话你的获取到的IP端可能是来自前端代理（如squid）的IP，结果就是多个用户被当成单个用户对待，导致应用不能响应。</p>
+<p>再PS一下： 自测: 有条件的自己可以用ab或者webben自测一下。</p>
+<p>未安装前压测的话，因为有大量请求，所以access.log会有大量日志，而error.log日志没有变化。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ webbench  <span class="literal">-c</span> <span class="number">30</span> <span class="literal">-t</span> <span class="number">30</span> http://xxx.com</span><br><span class="line">Webbench - Simple Web Benchmark <span class="number">1.5</span></span><br><span class="line">Copyright (c) Radim Kolar <span class="number">1997</span><span class="literal">-2004</span>, GPL Open Source Software.</span><br><span class="line">Benchmarking: GET http://xxx.com  </span><br><span class="line"><span class="number">30</span> clients, running <span class="number">30</span> sec.</span><br><span class="line">Speed=<span class="number">193468</span> pages/min, <span class="number">1254317</span> bytes/sec.</span><br><span class="line">Requests: <span class="number">96734</span> susceed, <span class="number">0</span> failed.</span><br></pre></td></tr></table></figure>
+<p>安装后会发现很多超出的请求会返回503,所以access.log日志变化不快，error.log有大量记录,提示limit_reque缓住了多少请求。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ webbench  <span class="literal">-c</span> <span class="number">30</span> <span class="literal">-t</span> <span class="number">30</span> http://xxxx.com</span><br><span class="line">Webbench - Simple Web Benchmark <span class="number">1.5</span></span><br><span class="line">Copyright (c) Radim Kolar <span class="number">1997</span><span class="literal">-2004</span>, GPL Open Source Software.</span><br><span class="line">Benchmarking: GET http://xxx.com  </span><br><span class="line"><span class="number">30</span> clients, running <span class="number">30</span> sec.</span><br><span class="line">Speed=<span class="number">120</span> pages/min, <span class="number">778</span> bytes/sec.</span><br><span class="line">Requests: <span class="number">60</span> susceed, <span class="number">0</span> failed.</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://webwlsong.github.io/2017/04/27/2017-04-28-1/" title="Nginx 限流" target="_blank" rel="external">https://webwlsong.github.io/2017/04/27/2017-04-28-1/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/webwlsong" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://static01.imgkr.com/temp/e857da9acde846d4a09582984209f398.png" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/webwlsong" target="_blank"><span class="text-dark">webwlsong</span><small class="ml-1x">Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2017/05/26/2017-05-27/" title="operator mono vs fira code"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2017/04/27/2017-04-28/" title="Nginx 负载均衡策略"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="https://webwlsong-1301722012.cos.ap-shanghai.myqcloud.com/mweb/2020/08/29/alipay.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="https://webwlsong-1301722012.cos.ap-shanghai.myqcloud.com/mweb/2020/08/29/wx_pay.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/webwlsong" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/webwlsong" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/webwlsong" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/webwlsong" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: 'ectr7l88yk7atjrzq1h0ptl10z5lck7psw1bvm0hxfio896h',
+    appKey: 'w1vhw2prhcgtuxero9gyhb0ie6apgyj6b1kv0e8rbkeg19jp',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
