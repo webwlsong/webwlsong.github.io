@@ -42,7 +42,7 @@ after_script:
   - git remote add origin master https://github.com/webwlsong/webwlsong.github.io.git
   - git add .
   - git commit -m "Gitee Pages Build"
-  - git push --force --quiet "https://${GITEE_TOKEN}@${CO_REF}" master:master
+  - git push --force --quiet "https://webwlsong:${GITEE_TOKEN}@${CO_REF}" master:master
   # Prepare Rebuild
   - cd ..
   - rm -rf ./public
