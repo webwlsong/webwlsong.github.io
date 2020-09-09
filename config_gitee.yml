@@ -1,0 +1,18 @@
+theme: pure
+language: zh-CN
+
+  # Site
+title: webwlsong
+subtitle: 无
+description: webwlsong的博客
+keywords: Go Java PHP Python DevOps Vue等
+author: webwlsong
+timezone: Asia/Shanghai
+# Deployment
+## Docs: https://hexo.io/docs/deployment.html
+url: https://webwlsong.gitee.io/
+# root: /webwlsong.github.io/
+deploy:
+  - type: git
+    repository: https://gitee.com/webwlsong/webwlsong.git
+    branch: master

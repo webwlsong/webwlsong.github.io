@@ -1,0 +1,10 @@
+{
+  "name" : "blog",
+  "fileExtension" : ".md",
+  "autoUploadInsertedImageKey" : "腾讯云-ap-shanghai",
+  "autoUploadInsertedImage" : false,
+  "folderType" : 10,
+  "mediaFloder" : "media",
+  "orderBy" : 0,
+  "newlinesToBR" : 0
+}

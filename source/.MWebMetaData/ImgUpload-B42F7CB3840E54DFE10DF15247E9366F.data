@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>F0B76D76C29229742AC3BA690B8CE236</key>
+	<array>
+		<dict>
+			<key>localURL</key>
+			<string>media/%E7%A8%8B%E5%BA%8F%E5%86%85%E5%AD%98%E8%BF%90%E8%A1%8C.jpg</string>
+			<key>remoteURL</key>
+			<string>https://webwlsong-1301722012.cos.ap-shanghai.myqcloud.com/mweb/2020/09/03/cheng-xu-nei-cun-yun-xing.jpg</string>
+		</dict>
+	</array>
+	<key>selectedItem</key>
+	<string>F0B76D76C29229742AC3BA690B8CE236</string>
+</dict>
+</plist>

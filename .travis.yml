@@ -1,0 +1,80 @@
+language: node_js
+#python: stable
+node_js: 13.2.0
+
+notifications:
+  email:
+    recipients:
+      - 16042409@qq.com
+    on_success: change # default: change
+    on_failure: always # default: always
+
+install:
+  - npm install
+  - npm install -g lint-md
+#  - sudo apt-get install python3 -y
+#  - sudo apt-get install python3-pip -y
+#  - sudo pip3 install pip -U
+#  - sudo -H pip3 config set global.index-url https://mirrors.aliyun.com/pypi/simple/
+#  - sudo -H pip3 install setuptools==33.1.1
+#  - sudo -H pip3 install leancloud
+#  - sudo -H pip3 install -r requirements.txt
+
+script:
+  - hexo clean
+#  - git rev-parse HEAD > VERSION.txt
+# - echo v$TRAVIS_BUILD_NUMBER > BUILD_NUMBER.
+#  - export TRAVIS_TAG=v1.0.$TRAVIS_BUILD_NUMBER.$(git log --format=%h -1)
+#  - echo $TRAVIS_TAG > BUILD_NUMBER.txt
+# - python3 migrate.py
+
+after_script:
+  - echo 'Build Master Repository(Gitee Pages)'
+  - rm _config.yml
+  - mv config_gitee.yml _config.yml
+  - hexo generate
+  #- cp albums.json ./public/albums.json
+  - git config user.name "WeiLi"
+  - git config user.email "webwlsong@vip.qq.com"
+  - cd ./public
+  - git init
+  - git remote add origin master https://github.com/webwlsong/webwlsong.github.io.git
+  - git add .
+  - git commit -m "Gitee Pages Build"
+  - git push --force --quiet "https://${GITEE_TOKEN}@${CO_REF}" master:master
+  # Prepare Rebuild
+  - cd ..
+  - rm -rf ./public
+  - hexo clean
+  - echo 'Build Salver Repository(Github Pages)'
+  - rm _config.yml
+  - mv config_github.yml _config.yml
+  - hexo generate
+  - git config user.name "WeiLi"
+  - git config user.email "webwlsong@vip.qq.com"
+  - cd ./public
+  - git init
+  - git remote add origin master https://github.com/webwlsong/webwlsong.github.io.git
+  - git add .
+  - git commit -m "Github Pages Build "
+  - git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:gh-pages
+# - git tag v$TRAVIS_BUILD_NUMBER
+#  - git tag $TRAVIS_TAG
+#  - git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:master --tags
+
+addons:
+  apt:
+    update: true
+
+branches:
+  only:
+    - master
+
+env:
+ global:
+   # Github Pages
+   - GH_REF: github.com/webwlsong/webwlsong.github.io.git
+   # Coding Pages
+   - CO_REF: gitee.com/webwlsong/webwlsong.git
+
+
