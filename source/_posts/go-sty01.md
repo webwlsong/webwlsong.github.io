@@ -1,7 +1,13 @@
 ---
 title: go基本语法
 date: 2016-04-28 15:25:02
-tags: [go,golang]
+tags: 
+ - go
+ - golang
+categories: 
+- go
+- golang
+
 ---
 
 ### 变量和赋值
