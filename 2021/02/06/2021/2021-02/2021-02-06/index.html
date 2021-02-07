@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>桌面程序技术选型大厂使用技术以及优劣对比 | Webwlsong`s Blog</title>
+  <meta name="description" content="大厂客户端使用技术     软件 客户端 语言     微信&#x2F;qq&#x2F;百度网盘 Windows c++  duilib   wps Windows c++ qt   酷狗 qq音乐 网易云音乐 阿里旺旺 Windows c++ libcef   讯雷 Windows Electron   钉钉&#x2F;微小宝&#x2F;微信web开发工具 Mac nw.js    钉钉  微小宝    做全端技术选型 C++ ,Q">
+<meta property="og:type" content="article">
+<meta property="og:title" content="桌面程序技术选型大厂使用技术以及优劣对比">
+<meta property="og:url" content="https://webwlsong.github.io/2021/02/06/2021/2021-02/2021-02-06/index.html">
+<meta property="og:site_name" content="webwlsong">
+<meta property="og:description" content="大厂客户端使用技术     软件 客户端 语言     微信&#x2F;qq&#x2F;百度网盘 Windows c++  duilib   wps Windows c++ qt   酷狗 qq音乐 网易云音乐 阿里旺旺 Windows c++ libcef   讯雷 Windows Electron   钉钉&#x2F;微小宝&#x2F;微信web开发工具 Mac nw.js    钉钉  微小宝    做全端技术选型 C++ ,Q">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://webwlsong.github.io/2021/02/06/2021/2021-02/2021-02-06/media/16126032642262.jpg">
+<meta property="og:image" content="https://webwlsong.github.io/2021/02/06/2021/2021-02/2021-02-06/media/16126031452041.jpg">
+<meta property="og:image" content="https://webwlsong.github.io/2021/02/06/2021/2021-02/2021-02-06/media/16126056137488.jpg">
+<meta property="og:image" content="https://webwlsong.github.io/2021/02/06/2021/2021-02/2021-02-06/media/16126056797898.jpg">
+<meta property="article:published_time" content="2021-02-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-02-07T02:29:22.315Z">
+<meta property="article:author" content="webwlsong">
+<meta property="article:tag" content="Electron">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="QT">
+<meta property="article:tag" content="Flutter">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://webwlsong.github.io/2021/02/06/2021/2021-02/2021-02-06/media/16126032642262.jpg">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://webwlsong.github.io/2021/02/06/2021/2021-02/2021-02-06/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="webwlsong" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="https://webwlsong-1301722012.cos.ap-shanghai.myqcloud.com/mweb/2020/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/webwlsong" target="_blank">
+          <img class="img-circle img-rotate" src="https://static01.imgkr.com/temp/e857da9acde846d4a09582984209f398.png" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">webwlsong</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> ShangHai, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/webwlsong" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/webwlsong" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/webwlsong" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/webwlsong" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/go/golang/">golang</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/%E5%86%85%E5%AD%98/">内存</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/go/%E5%86%85%E5%AD%98/%E5%A0%86%E6%A0%88/">堆栈</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/mono/">mono</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/">小程序</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Electron/" rel="tag">Electron</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QT/" rel="tag">QT</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/delve/" rel="tag">delve</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fira/" rel="tag">fira</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/frp/" rel="tag">frp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/" rel="tag">gitlab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jetbrains/" rel="tag">jetbrains</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongo/" rel="tag">mongo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mono/" rel="tag">mono</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/" rel="tag">nodejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/operator/" rel="tag">operator</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php-jit/" rel="tag">php-jit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php-mongo/" rel="tag">php-mongo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpstrom/" rel="tag">phpstrom</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pure/" rel="tag">pure</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyenv/" rel="tag">pyenv</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swoole/" rel="tag">swoole</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp/" rel="tag">tcp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/" rel="tag">ubuntu</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98/" rel="tag">内存</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" rel="tag">内网穿透</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A0%86%E6%A0%88/" rel="tag">堆栈</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B6%85%E6%97%B6/" rel="tag">超时</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/C/" style="font-size: 13px;">C++</a> <a href="/tags/Electron/" style="font-size: 13px;">Electron</a> <a href="/tags/Flutter/" style="font-size: 13px;">Flutter</a> <a href="/tags/PHP/" style="font-size: 13px;">PHP</a> <a href="/tags/QT/" style="font-size: 13px;">QT</a> <a href="/tags/c/" style="font-size: 13px;">c</a> <a href="/tags/c/" style="font-size: 13px;">c++</a> <a href="/tags/code/" style="font-size: 13px;">code</a> <a href="/tags/delve/" style="font-size: 13px;">delve</a> <a href="/tags/docker/" style="font-size: 13.5px;">docker</a> <a href="/tags/fira/" style="font-size: 13px;">fira</a> <a href="/tags/frp/" style="font-size: 13px;">frp</a> <a href="/tags/gitlab/" style="font-size: 13px;">gitlab</a> <a href="/tags/go/" style="font-size: 14px;">go</a> <a href="/tags/golang/" style="font-size: 13px;">golang</a> <a href="/tags/hexo/" style="font-size: 13px;">hexo</a> <a href="/tags/jetbrains/" style="font-size: 13px;">jetbrains</a> <a href="/tags/linux/" style="font-size: 13.5px;">linux</a> <a href="/tags/mongo/" style="font-size: 13px;">mongo</a> <a href="/tags/mono/" style="font-size: 13px;">mono</a> <a href="/tags/nginx/" style="font-size: 14px;">nginx</a> <a href="/tags/nodejs/" style="font-size: 13px;">nodejs</a> <a href="/tags/operator/" style="font-size: 13px;">operator</a> <a href="/tags/php/" style="font-size: 13.5px;">php</a> <a href="/tags/php-jit/" style="font-size: 13px;">php-jit</a> <a href="/tags/php-mongo/" style="font-size: 13px;">php-mongo</a> <a href="/tags/phpstrom/" style="font-size: 13px;">phpstrom</a> <a href="/tags/pure/" style="font-size: 13px;">pure</a> <a href="/tags/pyenv/" style="font-size: 13px;">pyenv</a> <a href="/tags/python/" style="font-size: 13px;">python</a> <a href="/tags/swoole/" style="font-size: 13px;">swoole</a> <a href="/tags/tcp/" style="font-size: 13px;">tcp</a> <a href="/tags/ubuntu/" style="font-size: 14px;">ubuntu</a> <a href="/tags/%E5%86%85%E5%AD%98/" style="font-size: 13px;">内存</a> <a href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" style="font-size: 13px;">内网穿透</a> <a href="/tags/%E5%A0%86%E6%A0%88/" style="font-size: 13px;">堆栈</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" style="font-size: 13px;">性能测试</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 13px;">架构</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 13px;">树莓派</a> <a href="/tags/%E8%B6%85%E6%97%B6/" style="font-size: 13px;">超时</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/02/06/2021/2021-02/2021-02-06/" class="title">桌面程序技术选型大厂使用技术以及优劣对比</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-05T16:00:00.000Z" itemprop="datePublished">2021-02-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/02/03/2021/2021-02/2021-02-03/" class="title">php Maximum execution time of 0 seconds exceeded</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-02T16:00:00.000Z" itemprop="datePublished">2021-02-03</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/">小程序</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/24/2020/2020-09/2020-09-24/" class="title">图解微信第三方开放平台流程图</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-23T16:00:00.000Z" itemprop="datePublished">2020-09-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/python/">python</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/18/2020/2020-09/2020-09-18/" class="title">pyenv的安装和简单使用（git、pyenv、pyenv-virtualenv）</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-17T16:00:00.000Z" itemprop="datePublished">2020-09-18</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/07/2020/2020-09/2020-09-07/" class="title">Mac用串口(ttl)连接树莓派3b+以及串口调试</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-06T16:00:00.000Z" itemprop="datePublished">2020-09-07</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-2021/2021-02/2021-02-06" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      桌面程序技术选型大厂使用技术以及优劣对比
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/02/06/2021/2021-02/2021-02-06/" class="article-date">
+	  <time datetime="2021-02-05T16:00:00.000Z" itemprop="datePublished">2021-02-06</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/C/" rel="tag">C++</a>, <a class="article-tag-link-link" href="/tags/Electron/" rel="tag">Electron</a>, <a class="article-tag-link-link" href="/tags/Flutter/" rel="tag">Flutter</a>, <a class="article-tag-link-link" href="/tags/QT/" rel="tag">QT</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/02/06/2021/2021-02/2021-02-06/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <ol>
+<li>大厂客户端使用技术</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">软件</th>
+<th style="text-align:center">客户端</th>
+<th style="text-align:center">语言</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">微信/qq/百度网盘</td>
+<td style="text-align:center">Windows</td>
+<td style="text-align:center">c++  duilib</td>
+</tr>
+<tr>
+<td style="text-align:center">wps</td>
+<td style="text-align:center">Windows</td>
+<td style="text-align:center">c++ qt</td>
+</tr>
+<tr>
+<td style="text-align:center">酷狗 qq音乐 网易云音乐 阿里旺旺</td>
+<td style="text-align:center">Windows</td>
+<td style="text-align:center">c++ libcef</td>
+</tr>
+<tr>
+<td style="text-align:center">讯雷</td>
+<td style="text-align:center">Windows</td>
+<td style="text-align:center">Electron</td>
+</tr>
+<tr>
+<td style="text-align:center">钉钉/微小宝/微信web开发工具</td>
+<td style="text-align:center">Mac</td>
+<td style="text-align:center">nw.js</td>
+</tr>
+</tbody>
+</table>
+<p>钉钉<br />
+<img src="media/16126032642262.jpg" alt="-w842" /></p>
+<p>微小宝<br />
+<img src="media/16126031452041.jpg" alt="-w829" /></p>
+<ol>
+<li>
+<p>做全端技术选型 C++ ,QT ,Winform ,Wpf,Electron,Flutter,C#(WebWindow+Blazor),Tauri</p>
+<ul>
+<li>Tauri 带后期观察 -话说可以取代Electron替代产品<br />
+代码仓库：<a target="_blank" rel="noopener" href="https://github.com/tauri-apps/tauri">https://github.com/tauri-apps/tauri</a></li>
+<li>Blazor 是一个使用 .NET 生成交互式客户端 Web UI 的框架：
+<ul>
+<li>使用 C# 代替 JavaScript 来创建信息丰富的交互式 UI。</li>
+<li>共享使用 .NET 编写的服务器端和客户端应用逻辑。</li>
+<li>将 UI 呈现为 HTML 和 CSS，以支持众多浏览器，其中包括移动浏览器。</li>
+<li>与新式托管平台（如 Docker）集成。</li>
+</ul>
+</li>
+<li>使用 .NET 进行客户端 Web 开发可提供以下优势：
+<ul>
+<li>使用 C# 代替 JavaScript 来编写代码。</li>
+<li>利用现有的 .NET 库生态系统。</li>
+<li>在服务器和客户端之间共享应用逻辑。</li>
+<li>受益于 .NET 的性能、可靠性和安全性。</li>
+<li>在 Windows、Linux 和 macOS 上使用 Visual Studio 保持高效工作。</li>
+<li>以一组稳定、功能丰富且易用的通用语言、框架和工具为基础来进行生成。<br />
+其他的自行搜索引擎查看文章</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>优缺点对比</p>
+<ul>
+<li>
+<p><a target="_blank" rel="noopener" href="https://nwjs.org.cn/">NW.js</a> 和 <a target="_blank" rel="noopener" href="http://electron.org.cn">Electron</a> 优缺点分析对比<br />
+通过前面的案例意识使用情况来看<br />
+优点：</p>
+<ul>
+<li>开源的核心扩展比较容易，目前是基于 node 6.x，加之现在 gyp 已经非常人性化了，使得c++ 和 js 搞基非常容易。</li>
+<li>界面定制性强，原则上只要是Web能做的他都能做。</li>
+<li>是目前最廉价的跨平台技术方案，HTML+JS 有大量的前端技术人员储备，而且有海量的现存web UI 库。大多都很靠谱。</li>
+<li>相对其他跨平台方案（如 QT GTK+ 等），更稳定，bug少， 毕竟只要浏览器外壳跑起来了，里面的问题不会太多 ，当然我也遇到过一些暗坑。</li>
+<li>方便热更新。下载覆盖完事。当然这是所有脚本共有的优点。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>卡，启动慢，这可能是webkit的锅。毕竟一个浏览器要支持的功能确实有点多。</li>
+<li>除了主进程 你可能还需要启动一些辅助进程来完成工作。而每当你新开一个进程，起步价就是一个nodejs的内存开销！</li>
+<li>丢帧，这个最严重，可我已习惯了native 的丝滑. mac下感觉还可以 win下有点够呛。</li>
+<li>打出来的包太大。（很显然，即便是一个空包，也至少包含了一个浏览器的体积</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>根据2021年1月<a target="_blank" rel="noopener" href="https://www.tiobe.com/tiobe-index/">语言排行榜</a><br />
+<img src="media/16126056137488.jpg" alt="-w961" /><br />
+<img src="media/16126056797898.jpg" alt="-w950" /></p>
+</li>
+<li>
+<p>我的技术选型<br />
+如果2021年开始做全端的互联网产品，目前阶段我的个人优先选择Flutter &gt; Electron<br />
+C#(WebWindow+Blazor)后劲十足，后期观察tauri根据作者的排的计划来看，估计要到2021年底才出一个bete版本，<a target="_blank" rel="noopener" href="https://tauri.studio/en/">官网</a> 2022年以后才能做一个稳定版本<br />
+根据不同产品需求技术选型时不一样，仁者见仁，智者见智。如果：如果做汽车类的一些产品或者工业级级别客户端优先去考虑QT,毕竟库还是很丰富。<br />
+我的技术选型一般从一下几个方面去考虑：</p>
+<ul>
+<li>技术生命周期，活跃性</li>
+<li>在某些行业库是否比较丰富</li>
+<li>根据团队的技术特点和项目的时间规划周期</li>
+</ul>
+</li>
+<li>
+<p><em>参考资料</em></p>
+<ul>
+<li>nw.js和Electron 优劣对比
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/small_tu/article/details/86606819">https://blog.csdn.net/small_tu/article/details/86606819</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7c66ee28ce51">https://www.jianshu.com/p/7c66ee28ce51</a></li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="http://Asp.net">Asp.net</a> Core Blazor
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7c66ee28ce51">https://www.jianshu.com/p/7c66ee28ce51</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/aspnet/core/blazor/?view=aspnetcore-5.0">https://docs.microsoft.com/zh-cn/aspnet/core/blazor/?view=aspnetcore-5.0</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://webwlsong.github.io/2021/02/06/2021/2021-02/2021-02-06/" title="桌面程序技术选型大厂使用技术以及优劣对比" target="_blank" rel="external">https://webwlsong.github.io/2021/02/06/2021/2021-02/2021-02-06/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/webwlsong" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://static01.imgkr.com/temp/e857da9acde846d4a09582984209f398.png" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/webwlsong" target="_blank"><span class="text-dark">webwlsong</span><small class="ml-1x">Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2021/02/03/2021/2021-02/2021-02-03/" title="php Maximum execution time of 0 seconds exceeded"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="https://webwlsong-1301722012.cos.ap-shanghai.myqcloud.com/mweb/2020/08/29/alipay.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="https://webwlsong-1301722012.cos.ap-shanghai.myqcloud.com/mweb/2020/08/29/wx_pay.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/webwlsong" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/webwlsong" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/webwlsong" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/webwlsong" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: 'ectr7l88yk7atjrzq1h0ptl10z5lck7psw1bvm0hxfio896h',
+    appKey: 'w1vhw2prhcgtuxero9gyhb0ie6apgyj6b1kv0e8rbkeg19jp',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

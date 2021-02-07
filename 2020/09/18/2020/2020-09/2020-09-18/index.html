@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>pyenv的安装和简单使用（git、pyenv、pyenv-virtualenv） | Webwlsong`s Blog</title>
+  <meta name="description" content="[TOC]   Python工作环境管理 Python 2和Python 3之间存在着较大的差异，并且，由于各种原因导致了Python 2和Python 3的长期 共存。在实际工作过程中，我们可能会同时用到Python 2和Python 3，因此，需要经常在Python 2和 Python 3之间进行来回切换。此外，如果你是喜欢尝鲜的人，那么，你很有可能在Python新版本出来 的时候立即下载Py">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pyenv的安装和简单使用（git、pyenv、pyenv-virtualenv）">
+<meta property="og:url" content="https://webwlsong.github.io/2020/09/18/2020/2020-09/2020-09-18/index.html">
+<meta property="og:site_name" content="webwlsong">
+<meta property="og:description" content="[TOC]   Python工作环境管理 Python 2和Python 3之间存在着较大的差异，并且，由于各种原因导致了Python 2和Python 3的长期 共存。在实际工作过程中，我们可能会同时用到Python 2和Python 3，因此，需要经常在Python 2和 Python 3之间进行来回切换。此外，如果你是喜欢尝鲜的人，那么，你很有可能在Python新版本出来 的时候立即下载Py">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/09/18/7eGfMl86NDjUkFd.jpg">
+<meta property="article:published_time" content="2020-09-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-09-18T01:05:00.102Z">
+<meta property="article:author" content="webwlsong">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="pyenv">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/09/18/7eGfMl86NDjUkFd.jpg">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://webwlsong.github.io/2020/09/18/2020/2020-09/2020-09-18/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="webwlsong" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="https://webwlsong-1301722012.cos.ap-shanghai.myqcloud.com/mweb/2020/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/webwlsong" target="_blank">
+          <img class="img-circle img-rotate" src="https://static01.imgkr.com/temp/e857da9acde846d4a09582984209f398.png" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">webwlsong</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> ShangHai, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/webwlsong" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/webwlsong" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/webwlsong" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/webwlsong" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/go/golang/">golang</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/%E5%86%85%E5%AD%98/">内存</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/go/%E5%86%85%E5%AD%98/%E5%A0%86%E6%A0%88/">堆栈</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/mono/">mono</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/">小程序</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Electron/" rel="tag">Electron</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QT/" rel="tag">QT</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/delve/" rel="tag">delve</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fira/" rel="tag">fira</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/frp/" rel="tag">frp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/" rel="tag">gitlab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jetbrains/" rel="tag">jetbrains</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongo/" rel="tag">mongo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mono/" rel="tag">mono</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/" rel="tag">nodejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/operator/" rel="tag">operator</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php-jit/" rel="tag">php-jit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php-mongo/" rel="tag">php-mongo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpstrom/" rel="tag">phpstrom</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pure/" rel="tag">pure</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyenv/" rel="tag">pyenv</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swoole/" rel="tag">swoole</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp/" rel="tag">tcp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/" rel="tag">ubuntu</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98/" rel="tag">内存</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" rel="tag">内网穿透</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A0%86%E6%A0%88/" rel="tag">堆栈</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B6%85%E6%97%B6/" rel="tag">超时</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/C/" style="font-size: 13px;">C++</a> <a href="/tags/Electron/" style="font-size: 13px;">Electron</a> <a href="/tags/Flutter/" style="font-size: 13px;">Flutter</a> <a href="/tags/PHP/" style="font-size: 13px;">PHP</a> <a href="/tags/QT/" style="font-size: 13px;">QT</a> <a href="/tags/c/" style="font-size: 13px;">c</a> <a href="/tags/c/" style="font-size: 13px;">c++</a> <a href="/tags/code/" style="font-size: 13px;">code</a> <a href="/tags/delve/" style="font-size: 13px;">delve</a> <a href="/tags/docker/" style="font-size: 13.5px;">docker</a> <a href="/tags/fira/" style="font-size: 13px;">fira</a> <a href="/tags/frp/" style="font-size: 13px;">frp</a> <a href="/tags/gitlab/" style="font-size: 13px;">gitlab</a> <a href="/tags/go/" style="font-size: 14px;">go</a> <a href="/tags/golang/" style="font-size: 13px;">golang</a> <a href="/tags/hexo/" style="font-size: 13px;">hexo</a> <a href="/tags/jetbrains/" style="font-size: 13px;">jetbrains</a> <a href="/tags/linux/" style="font-size: 13.5px;">linux</a> <a href="/tags/mongo/" style="font-size: 13px;">mongo</a> <a href="/tags/mono/" style="font-size: 13px;">mono</a> <a href="/tags/nginx/" style="font-size: 14px;">nginx</a> <a href="/tags/nodejs/" style="font-size: 13px;">nodejs</a> <a href="/tags/operator/" style="font-size: 13px;">operator</a> <a href="/tags/php/" style="font-size: 13.5px;">php</a> <a href="/tags/php-jit/" style="font-size: 13px;">php-jit</a> <a href="/tags/php-mongo/" style="font-size: 13px;">php-mongo</a> <a href="/tags/phpstrom/" style="font-size: 13px;">phpstrom</a> <a href="/tags/pure/" style="font-size: 13px;">pure</a> <a href="/tags/pyenv/" style="font-size: 13px;">pyenv</a> <a href="/tags/python/" style="font-size: 13px;">python</a> <a href="/tags/swoole/" style="font-size: 13px;">swoole</a> <a href="/tags/tcp/" style="font-size: 13px;">tcp</a> <a href="/tags/ubuntu/" style="font-size: 14px;">ubuntu</a> <a href="/tags/%E5%86%85%E5%AD%98/" style="font-size: 13px;">内存</a> <a href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" style="font-size: 13px;">内网穿透</a> <a href="/tags/%E5%A0%86%E6%A0%88/" style="font-size: 13px;">堆栈</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" style="font-size: 13px;">性能测试</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 13px;">架构</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 13px;">树莓派</a> <a href="/tags/%E8%B6%85%E6%97%B6/" style="font-size: 13px;">超时</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/02/06/2021/2021-02/2021-02-06/" class="title">桌面程序技术选型大厂使用技术以及优劣对比</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-05T16:00:00.000Z" itemprop="datePublished">2021-02-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/02/03/2021/2021-02/2021-02-03/" class="title">php Maximum execution time of 0 seconds exceeded</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-02T16:00:00.000Z" itemprop="datePublished">2021-02-03</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/">小程序</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/24/2020/2020-09/2020-09-24/" class="title">图解微信第三方开放平台流程图</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-23T16:00:00.000Z" itemprop="datePublished">2020-09-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/python/">python</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/18/2020/2020-09/2020-09-18/" class="title">pyenv的安装和简单使用（git、pyenv、pyenv-virtualenv）</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-17T16:00:00.000Z" itemprop="datePublished">2020-09-18</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/07/2020/2020-09/2020-09-07/" class="title">Mac用串口(ttl)连接树莓派3b+以及串口调试</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-06T16:00:00.000Z" itemprop="datePublished">2020-09-07</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-2020/2020-09/2020-09-18" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      pyenv的安装和简单使用（git、pyenv、pyenv-virtualenv）
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/09/18/2020/2020-09/2020-09-18/" class="article-date">
+	  <time datetime="2020-09-17T16:00:00.000Z" itemprop="datePublished">2020-09-18</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/python/">python</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/pyenv/" rel="tag">pyenv</a>, <a class="article-tag-link-link" href="/tags/python/" rel="tag">python</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/09/18/2020/2020-09/2020-09-18/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<p><img src="https://i.loli.net/2020/09/18/7eGfMl86NDjUkFd.jpg" alt="python生态工具" /></p>
+<h1 id="python工作环境管理"><a class="markdownIt-Anchor" href="#python工作环境管理"></a> Python工作环境管理</h1>
+<p>Python 2和Python 3之间存在着较大的差异，并且，由于各种原因导致了Python 2和Python 3的长期 共存。在实际工作过程中，我们可能会同时用到Python 2和Python 3，因此，需要经常在Python 2和 Python 3之间进行来回切换。此外，如果你是喜欢尝鲜的人，那么，你很有可能在Python新版本出来 的时候立即下载Python的版本，试验Python的特性。</p>
+<p>在Python世界里，除了需要对Python的版本进行管理以外，还需要对不同的软件包进行管理。大部分 情况下，对于开源的库我们使用版本即可。但是，有时候可能需要对相同的Python版本，在不同的 项目中使用不同版本的软件包。</p>
+<p>在这一节里，我们将介绍两个工具，即pyenv和virtualenv。前者用于管理不同的Python版本，后者用 于管理不同的工作环境。有了这两个工具，Python相关的版本问题将不再是问题。</p>
+<h2 id="1-情景问题"><a class="markdownIt-Anchor" href="#1-情景问题"></a> 1、情景问题</h2>
+<ol>
+<li>Python解释器版本混乱, 2和3差别巨大, 而且细分版本也不尽相同, 难以选择和管理.</li>
+<li>不同Linux发行版自带Python不同, 如ubuntu16自带2.7和3.5版本, 其中系统许多组件依赖于自带解释器, 一旦删除或者更改都可能会造成系统出问题.</li>
+<li>不同的Python解释器软件包管理也是问题, 如pip和ipython等必备包组件, 而且在项目开发中如何保证不同的包环境互不干扰也是一个问题.</li>
+<li></li>
+</ol>
+<p>那么有没有一个终极的解决办法能在管理不同解释器版本的同时控制不同的包环境呢? 有的, 就是pyenv.</p>
+<h2 id="2-使用pyenv管理不同的python版本"><a class="markdownIt-Anchor" href="#2-使用pyenv管理不同的python版本"></a> 2、使用pyenv管理不同的Python版本</h2>
+<p>安装不同的Python版本并不是一件容易的事情，在不同的Python版本之间来回切换更加困难，而且， 多版本并存非常容易互相干扰。因此，我们需要一个名为pyenv的工具。pyenv是一个Python版本管理 工具，它能够进行全局的Python版本切换，也可以为单个项目提供对应的Python版本。使用pyenv以 后，可以在服务器上安装多个不同的Python版本，也可以安装不同的Python实现。不同Python版本之 间的切换也非常简单。接下来我们就一起看一下pyenv的安装和使用。</p>
+<h2 id="pyenv是什么-能干什么"><a class="markdownIt-Anchor" href="#pyenv是什么-能干什么"></a> pyenv是什么? 能干什么?</h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">pyenv是一个forked自ruby社区的简单、低调、遵循UNIX哲</span><br><span class="line"></span><br><span class="line">学的Python环境管理工具, 它可以轻松切换全局解释器版本, </span><br><span class="line"></span><br><span class="line">同时结合vitualenv插件可以方便的管理对应的包源.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>我们知道, 在terminal中输入一个命令比如‘ls’时, shell会从当前环境的PATH中的各个目录里看是不是有ls这个可执行文件, 如果找到就执行, 否则就会报‘command no found’ 的错误, 同理, 只要控制PATH变量就能够做到python版本的切换, pyenv通过在PATH头部插入shims路径来实现对python版本的控制.</p>
+<p>pyenv和流行的pipenv、virtualenv的关系</p>
+<p>pipenv是requests 作者 Kenneth Reitz大神写的一个python虚拟环境管理工具, 结合了pip和virtualenv的功能, 侧重点还是在包环境管理上, 使用思路是先创建一个指定python版本的环境, 然后在此环境上安装相应的包, 好评不错, 看到很多大牛都在推荐.</p>
+<p>pipenv是requests 作者 Kenneth Reitz大神写的一个python虚拟环境管理工具, 结合了pip和virtualenv的功能, 侧重点还是在包环境管理上, 使用思路是先创建一个指定python版本的环境, 然后在此环境上安装相应的包, 好评不错, 看到很多大牛都在推荐.</p>
+<p>pyenv相对来说知名度就差很多了, 不过也很稳定, 这三个环境管理工具我都用过, 我个人更喜欢pyenv, 理由如下:</p>
+<ol>
+<li>相对于其他两个工具, pyenv更侧重在python 解释器版本管理上, 比包管理更大一个层级, 使用pyenv我可以方便的下载指定版本的python解释器, pypy, anaconda等, 可以随时自由的在shell环境中本地、全局切换python解释器</li>
+<li>开发的时候不需要限定某个版本的虚拟环境, 只需要在部署的时候用pyenv指定某个版本就好了</li>
+<li>pyenv切换解释器版本的时候, pip和ipython以及对应的包环境都是一起切换的, 所以如果你要同时运行ipython2.x和ipython3.x多个解释器验证一些代码时就很方便</li>
+<li>pyenv也可以创建好指定的虚拟环境, 但不需要指定具体目录, 自由度更高, 使用也简单</li>
+</ol>
+<h2 id="4-简单使用"><a class="markdownIt-Anchor" href="#4-简单使用"></a> 4、简单使用</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看当前版本</span></span><br><span class="line">pyenv version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看所有版本</span></span><br><span class="line">pyenv versions</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看所有可安装的版本</span></span><br><span class="line">pyenv install --list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装指定版本</span></span><br><span class="line">pyenv install 3.6.5</span><br><span class="line"><span class="comment"># 安装新版本后rehash一下</span></span><br><span class="line">pyenv <span class="built_in">rehash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除指定版本</span></span><br><span class="line">pyenv uninstall 3.5.2</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定全局版本</span></span><br><span class="line">pyenv global 3.6.5</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定多个全局版本, 3版本优先</span></span><br><span class="line">pyenv global 3.6.5 2.7.14</span><br><span class="line"></span><br><span class="line"><span class="comment"># 实际上当你切换版本后, 相应的pip和包仓库都是会自动切换过去的</span></span><br></pre></td></tr></table></figure>
+<h2 id="一-pyenv安装"><a class="markdownIt-Anchor" href="#一-pyenv安装"></a> 一、pyenv安装</h2>
+<ol>
+<li>安装 pyenv</li>
+</ol>
+<p>说明：本文的所有安装都严格遵守官方文档，与官方文档完全保持一致。</p>
+<p>git 地址：<a target="_blank" rel="noopener" href="https://github.com/pyenv/pyenv">https://github.com/pyenv/pyenv</a></p>
+<p>在你的终端中执行如下命令，安全无毒，请放心食用：</p>
+<p>首先把项目克隆下来，放在家目录下的隐藏文件夹中：.pyenv</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;pyenv&#x2F;pyenv.git ~&#x2F;.pyenv</span><br></pre></td></tr></table></figure>
+<p>然后配置变量</p>
+<p>如果你使用 bash，就依次执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PYENV_ROOT=&quot;$HOME/.pyenv&quot;&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=&quot;$PYENV_ROOT/bin:$PATH&quot;&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;if command -v pyenv 1&gt;/dev/null 2&gt;&amp;1; then\n eval &quot;$(pyenv init -)&quot;\nfi&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>如果你使用 zsh，就依次执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PYENV_ROOT=&quot;$HOME/.pyenv&quot;&#x27;</span> &gt;&gt; ~/.zshrc</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=&quot;$PYENV_ROOT/bin:$PATH&quot;&#x27;</span> &gt;&gt; ~/.zshrc</span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;if command -v pyenv 1&gt;/dev/null 2&gt;&amp;1; then\n eval &quot;$(pyenv init -)&quot;\nfi&#x27;</span> &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure>
+<p>echo 命令的含义是：将引号中内容写入某文件中<br />
+请注意，以上的三条 echo 命令的最后一条长长的命令，请你保证它引号中的内容处于 ~/.bashrc 或者 ~/.zshrc 的最底部。<br />
+因为在 pyenv 初始化期间会操作 path 环境变量，导致不可预测的行为。<br />
+查看文件的底部内容，可以使用 tail 命令，用法：tail ~/.bashrc 或者 tail ~/.zshrc，编辑文件可以使用 vim 或者 vscode</p>
+<p>最后，在使用 pyenv 之前，重新初始化 shell 环境，执行如下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exec</span> <span class="variable">$SHELL</span> 或者 <span class="built_in">source</span> </span><br></pre></td></tr></table></figure>
+<p>不执行该命令也是完全可以的，你可以关闭当前的终端窗口，重新启动一个就可以了。</p>
+<p>此时，你已经完成了 pyenv 的安装了，你使用可以它的全部命令了，但是我建议你先别急着用，一口气装完 pyenv 的一个插件，那就是 pyenv-virtualenv</p>
+<ol start="2">
+<li>安装 pyenv-virtualenv</li>
+</ol>
+<p>virtualenv本身是一个独立的项目，用以隔离不同项目的工作环境。例如，用户lmx希望在项目A中使用 Flask 0.8这个版本，与此同时，又想在项目B中使用Flask 0.9这个版本。如果我们全局安装Flask，必然 无法满足用户的需求。这个时候，我们就可以使用virtualenv。</p>
+<p>读者需要注意pyenv和virtualenv的区别。pyenv用以管理不同的Python版本，例如，你的系统工作时 使用Python 2.7.13，学习时使用Python 3.6.0。virtualenv用以隔离项目的工作环境，例如，项目A和 项目B都是使用Python 2.7.13，但是，项目A需要使用Flask 0.8版本，项目B需要使用Flask 0.9版本。我 们只要组合pyenv和virtualenv这两个工具，就能够构造Python和第三方库的任意版本组合，拥有很好 的灵活性，也避免了项目之间的相互干扰。</p>
+<p>virtualenv本身是一个独立的工具，用户可以不使用pyenv而单独使用virtualenv。但是，如果你使用了 pyenv，就需要安装pyenv-virtualenv插件，而不是通过virtualenv软件使用virtualenv的功能。</p>
+<p>git 地址：<a target="_blank" rel="noopener" href="https://github.com/pyenv/pyenv-virtualenv">https://github.com/pyenv/pyenv-virtualenv</a></p>
+<p>(1) 把插件克隆在刚才已经安装完毕的 pyenv 的 plugins 文件夹中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv</span><br></pre></td></tr></table></figure>
+<p>(2) 然后配置环境变量<br />
+如果你使用 bash，就执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;eval &quot;$(pyenv virtualenv-init -)&quot;&#x27;</span> &gt;&gt; ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p>如果你使用 zsh，就执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;eval &quot;$(pyenv virtualenv-init -)&quot;&#x27;</span> &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure>
+<p>(3) 最后，在使用 pyenv 之前，重新初始化 shell 环境，执行如下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exec</span> <span class="variable">$SHELL</span></span><br></pre></td></tr></table></figure>
+<p>不执行该命令也是完全可以的，你可以关闭当前的终端窗口，重新启动一个就可以了。</p>
+<p>至此，pyenv就安装完成了，我们可以通过下面的命令验证pyenv是否正确安装并获取pyenv的帮助信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">pyenv --<span class="built_in">help</span></span><br><span class="line">Usage: pyenv &lt;<span class="built_in">command</span>&gt; [&lt;args&gt;]</span><br><span class="line"></span><br><span class="line">Some useful pyenv commands are:</span><br><span class="line">   --version   Display the version of pyenv</span><br><span class="line">   activate    Activate virtual environment</span><br><span class="line">   commands    List all available pyenv commands</span><br><span class="line">   deactivate   Deactivate virtual environment</span><br><span class="line">   <span class="built_in">exec</span>        Run an executable with the selected Python version</span><br><span class="line">   global      Set or show the global Python version(s)</span><br><span class="line">   <span class="built_in">help</span>        Display <span class="built_in">help</span> <span class="keyword">for</span> a <span class="built_in">command</span></span><br><span class="line">   hooks       List hook scripts <span class="keyword">for</span> a given pyenv <span class="built_in">command</span></span><br><span class="line">   init        Configure the shell environment <span class="keyword">for</span> pyenv</span><br><span class="line">   install     Install a Python version using python-build</span><br><span class="line">   <span class="built_in">local</span>       Set or show the <span class="built_in">local</span> application-specific Python version(s)</span><br><span class="line">   prefix      Display prefix <span class="keyword">for</span> a Python version</span><br><span class="line">   <span class="built_in">rehash</span>      Rehash pyenv shims (run this after installing executables)</span><br><span class="line">   root        Display the root directory <span class="built_in">where</span> versions and shims are kept</span><br><span class="line">   shell       Set or show the shell-specific Python version</span><br><span class="line">   shims       List existing pyenv shims</span><br><span class="line">   uninstall   Uninstall a specific Python version</span><br><span class="line">   version     Show the current Python version(s) and its origin</span><br><span class="line">   version-file   Detect the file that sets the current pyenv version</span><br><span class="line">   version-name   Show the current Python version</span><br><span class="line">   version-origin   Explain how the current Python version is <span class="built_in">set</span></span><br><span class="line">   versions    List all Python versions available to pyenv</span><br><span class="line">   virtualenv   Create a Python virtualenv using the pyenv-virtualenv plugin</span><br><span class="line">   virtualenv-delete   Uninstall a specific Python virtualenv</span><br><span class="line">   virtualenv-init   Configure the shell environment <span class="keyword">for</span> pyenv-virtualenv</span><br><span class="line">   virtualenv-prefix   Display real_prefix <span class="keyword">for</span> a Python virtualenv version</span><br><span class="line">   virtualenvs   List all Python virtualenvs found <span class="keyword">in</span> `<span class="variable">$PYENV_ROOT</span>/versions/*<span class="string">&#x27;.</span></span><br><span class="line"><span class="string">   whence      List all Python versions that contain the given executable</span></span><br><span class="line"><span class="string">   which       Display the full path to an executable</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">See `pyenv help &lt;command&gt;&#x27;</span> <span class="keyword">for</span> information on a specific <span class="built_in">command</span>.</span><br><span class="line">For full documentation, see: https://github.com/pyenv/pyenv<span class="comment">#readme</span></span><br></pre></td></tr></table></figure>
+<h2 id="二-使用-pyenv"><a class="markdownIt-Anchor" href="#二-使用-pyenv"></a> 二、使用 pyenv</h2>
+<p>此处仅仅展示 pyenv 和 virtualenv 的日常用法</p>
+<p>1、检查安装是否正确<br />
+检查 pyenv 的版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@python ~]<span class="comment"># pyenv version</span></span><br><span class="line">(<span class="built_in">set</span> by /root/.pyenv/version)</span><br><span class="line">查看 pyenv 已经管理了哪些 python 版本</span><br><span class="line">[root@python ~]<span class="comment">#pyenv versions</span></span><br><span class="line">* system (<span class="built_in">set</span> by /root/.pyenv/version)</span><br></pre></td></tr></table></figure>
+<p>如果你看到了正常的版本信息，就说明可以了，如果看到了类似于 command not found 之类的，就说明安装失败了。</p>
+<p>我们通过pyenv的install命令，可以查看pyenv当前支持哪些Python版本，如下所示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@python ~]<span class="comment"># pyenv install --list </span></span><br><span class="line">Available versions:</span><br><span class="line">2.1.3</span><br><span class="line">……省略部分信息</span><br><span class="line">3.8.0</span><br><span class="line">3.8-dev</span><br><span class="line">3.8.1</span><br><span class="line">3.9-dev</span><br><span class="line">……省略部分信息</span><br><span class="line">anaconda3-2018.12</span><br><span class="line">anaconda3-2019.03</span><br><span class="line">anaconda3-2019.07</span><br><span class="line">anaconda3-2019.10</span><br><span class="line">……省略部分信息</span><br><span class="line">[root@python ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<p>2、pyenv切换python版本<br />
+由于pyenv可以安装的Python版本列表非常长，所以，这里进行了省略。读者可以在自己电脑上安装 pyenv，然后执行pyenv install --list命令进行查看。可以看到，pyenv不但可以安装不同的Python版 本，而且还可以安装不同的Python实现，也可以安装版本的Python用以学习。</p>
+<p>查看当前系统中包含的Python版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@python ~]<span class="comment"># pyenv versions </span></span><br><span class="line">* system (<span class="built_in">set</span> by /root/.pyenv/version)</span><br><span class="line">使用pyenv安装不同的Python版本：</span><br><span class="line">[root@python ~]<span class="comment">#pyenv install -v 3.8.1  </span></span><br><span class="line">[root@python ~]<span class="comment">#pyenv install -v 2.7.13 </span></span><br></pre></td></tr></table></figure>
+<p>再次查看当前系统中包含的Python版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@python ~]<span class="comment"># pyenv versions</span></span><br><span class="line">* system (<span class="built_in">set</span> by /root/.pyenv/version)</span><br><span class="line">  2.7.13</span><br><span class="line">  3.8.1</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>切换前为3.8.1</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#切换当前为3.8.1</span></span><br><span class="line">[root@python ~]<span class="comment"># python</span></span><br><span class="line">Python 3.8.1 (default, Apr 20 2020, 15:00:10) </span><br><span class="line">[GCC 4.8.5 20150623 (Red Hat 4.8.5-39)] on linux</span><br><span class="line">Type <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> or <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more informatio</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>切换为2.7.13</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@python ~]<span class="comment"># pyenv  global 2.7.13 </span></span><br><span class="line">[root@python ~]<span class="comment"># python</span></span><br><span class="line">Python 2.7.13 (default, Apr 20 2020, 15:04:15) </span><br><span class="line">[GCC 4.8.5 20150623 (Red Hat 4.8.5-39)] on linux2</span><br><span class="line">Type <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> or <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br></pre></td></tr></table></figure>
+<p>使用pyenv以后，可以快速切换Python的版本。切换Python版本以后，与版本相关的依赖也会一起切 换。因此，我们不用担心不同的版本在系统中是否会相互干扰。例如，切换Python版本以后，相应的 pip也会跟着切换，所以不用担心自己使用的pip版本和Python版本不匹配的问题，如下所示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@python ~]<span class="comment"># pyenv  global 3.8.1</span></span><br><span class="line">[root@python ~]<span class="comment"># pip --version</span></span><br><span class="line">pip 19.2.3 from /root/.pyenv/versions/3.8.1/lib/python3.8/site-packages/pip (python 3.8)</span><br><span class="line">如果想要删除Python版本，使用uninstall命令即可。如下所示：</span><br><span class="line">[root@python ~]<span class="comment"># pyenv uninstall 2.7.10</span></span><br></pre></td></tr></table></figure>
+<h2 id="三-pyenv-virtualenv的使用"><a class="markdownIt-Anchor" href="#三-pyenv-virtualenv的使用"></a> 三、pyenv-virtualenv的使用</h2>
+<p>有了pyenv-virtualenv以后，我们可以为同一个Python解释器，创建多个不同的工作环境。例如，我们 新建两个工作环境：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@python ~]<span class="comment"># pyenv virtualenv 3.8.1 first_project </span></span><br><span class="line">[root@python ~]<span class="comment"># pyenv virtualenv 3.8.1 second_projec</span></span><br><span class="line">可以使用virtualenvs子命令查看工作环境</span><br><span class="line">[root@python ~]<span class="comment"># pyenv virtualenvs</span></span><br><span class="line">  3.8.1/envs/first_project (created from /root/.pyenv/versions/3.8.1)</span><br><span class="line">  3.8.1/envs/second_projec (created from /root/.pyenv/versions/3.8.1)</span><br><span class="line">  first_project (created from /root/.pyenv/versions/3.8.1)</span><br><span class="line">  second_projec (created from /root/.pyenv/versions/3.8.1)</span><br></pre></td></tr></table></figure>
+<p>创建完工作环境以后，可以通过activate和deactivate子命令进入或退出一个工作环境。进入工作环境 以后，左边的提示符会显示你当前所在的工作环境，以免因为环境太多导致操作错误。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">(first_project) </span><br><span class="line">[root@python ~]<span class="comment"># pip install flask==1.1.1 </span></span><br><span class="line">Looking <span class="keyword">in</span> indexes: https://pypi.doubanio.com/simple</span><br><span class="line">Collecting flask==1.1.1</span><br><span class="line">  Downloading https://pypi.doubanio.com/packages/9b/93/628509b8d5dc749656a9641f4caf13540e2cdec85276964ff8f43bbb1d3b/Flask-1.1.1-py2.py3-none-any.whl (94kB)</span><br><span class="line">     |███▌                            | 10kB 28.0MB/s eta 0:00:</span><br><span class="line">     |███████                         | 20kB 1.8MB/s eta 0:00:0</span><br><span class="line">     |██████████▍                     | 30kB 2.7MB/s eta 0:00:0</span><br><span class="line">     |█████████████▉                  | 40kB 1.8MB/s eta 0:00:0</span><br><span class="line">     |█████████████████▍              | 51kB 1.3MB/s eta 0:00:0</span><br><span class="line">     |████████████████████▉           | 61kB 1.5MB/s eta 0:00:0</span><br><span class="line">     |████████████████████████▎       | 71kB 1.4MB/s eta 0:00:0</span><br><span class="line">     |███████████████████████████▊    | 81kB 1.3MB/s eta 0:00:0</span><br><span class="line">     |███████████████████████████████▏| 92kB 1.4MB/s eta 0:00:0</span><br><span class="line">     |████████████████████████████████| 102kB 1.6MB/s </span><br><span class="line">Collecting itsdangerous&gt;=0.24 (from flask==1.1.1)</span><br><span class="line">(first_project) [root@python ~]<span class="comment"># pyenv deactivate</span></span><br><span class="line"><span class="comment">## 退出first_project环境</span></span><br><span class="line">[root@python ~]<span class="comment"># </span></span><br></pre></td></tr></table></figure>
+<p>接下来，我们看一下在不同的工作环境安装不同的Flask版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@python ~]<span class="comment"># pyenv activate first_project </span></span><br><span class="line"><span class="comment">##切换工作环境</span></span><br><span class="line">(first_project) [root@python ~]<span class="comment"># pip install flask==1.1.1 </span></span><br><span class="line"><span class="comment">##安装1.1.1的flask</span></span><br><span class="line">(first_project) [root@python ~]<span class="comment"># pyenv deactivate </span></span><br><span class="line"><span class="comment">##退出目前工作环境</span></span><br><span class="line">[root@python ~]<span class="comment">#</span></span><br><span class="line"></span><br><span class="line">[root@python ~]<span class="comment"># pyenv activate second_projec</span></span><br><span class="line"><span class="comment">##切换工作环境</span></span><br><span class="line">(second_project) [root@python ~]<span class="comment"># pip install flask==0.10.1</span></span><br><span class="line"><span class="comment">##安装0.10.1的flask</span></span><br><span class="line">(second_project) [root@python ~]<span class="comment"># pyenv deactivate </span></span><br><span class="line"><span class="comment">##退出目前工作环境</span></span><br><span class="line">[root@python ~]<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<p>查看一下两个工作环境源目录<br />
+pyenv的安装和简单使用（git、pyenv、pyenv-virtualenv）</p>
+<p>如果想要删除虚拟环境，则使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(first_project)</span><br><span class="line"> [root@python ~]<span class="comment"># pyenv virtualenv-delete first_project </span></span><br></pre></td></tr></table></figure>
+<p>使用pyenv和python-virtualenv插件，我们就能够自由地在不同的版本之间进行切换，相比管理Python 版本，不但节省了时间，也避免了工作过程中的相互干扰。</p>
+<h2 id="四-更新-pyenv"><a class="markdownIt-Anchor" href="#四-更新-pyenv"></a> 四、更新 pyenv</h2>
+<p>由于我们是 git 克隆的，所以更新非常简单</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/.pyenv` 或者 `<span class="built_in">cd</span> $(pyenv root)`</span><br><span class="line"> `git pull</span><br></pre></td></tr></table></figure>
+<h2 id="五-卸载-pyenv"><a class="markdownIt-Anchor" href="#五-卸载-pyenv"></a> 五、卸载 pyenv</h2>
+<p>由于 pyenv 把一切都放在 ~/.pyenv 下了，所以卸载很方便，两个步骤就行了</p>
+<p>首先你需要删除环境变量</p>
+<p>然后你需要执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -rf ~/.pyenv` 或者 `rm -rf $(pyenv root)</span><br></pre></td></tr></table></figure>
+<p><em>载录文献:</em></p>
+<ul>
+<li><em>pyenv的安装和简单使用（git、pyenv、pyenv-virtualenv）<br />
+<a target="_blank" rel="noopener" href="https://blog.51cto.com/14320361/2488888">https://blog.51cto.com/14320361/2488888</a></em></li>
+</ul>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://webwlsong.github.io/2020/09/18/2020/2020-09/2020-09-18/" title="pyenv的安装和简单使用（git、pyenv、pyenv-virtualenv）" target="_blank" rel="external">https://webwlsong.github.io/2020/09/18/2020/2020-09/2020-09-18/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/webwlsong" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://static01.imgkr.com/temp/e857da9acde846d4a09582984209f398.png" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/webwlsong" target="_blank"><span class="text-dark">webwlsong</span><small class="ml-1x">Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/09/24/2020/2020-09/2020-09-24/" title="图解微信第三方开放平台流程图"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/09/07/2020/2020-09/2020-09-07/" title="Mac用串口(ttl)连接树莓派3b+以及串口调试"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="https://webwlsong-1301722012.cos.ap-shanghai.myqcloud.com/mweb/2020/08/29/alipay.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="https://webwlsong-1301722012.cos.ap-shanghai.myqcloud.com/mweb/2020/08/29/wx_pay.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/webwlsong" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/webwlsong" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/webwlsong" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/webwlsong" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: 'ectr7l88yk7atjrzq1h0ptl10z5lck7psw1bvm0hxfio896h',
+    appKey: 'w1vhw2prhcgtuxero9gyhb0ie6apgyj6b1kv0e8rbkeg19jp',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

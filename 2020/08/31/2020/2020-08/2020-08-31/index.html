@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>DIY服务器搭建，内网穿透搭建 | Webwlsong`s Blog</title>
+  <meta name="description" content="起初一直在用云服务器来搭自用服务器，为什么还要用自建一个服务器？  云服务价格偏高性 性能达不到要求 IT人爱折腾，生命不止，学习不止   服务器选择  耗电量小 性价比高 噪声小(几乎没有噪声) 考虑过台式工作站服务器，NAS，最终选择mini电脑当自用服务器。   制作U盘Linux启动盘 推荐使用工具rufus(推荐),UltraISO(不太推荐) rufus做好启动盘之后，不需要修改卷标">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DIY服务器搭建，内网穿透搭建">
+<meta property="og:url" content="https://webwlsong.github.io/2020/08/31/2020/2020-08/2020-08-31/index.html">
+<meta property="og:site_name" content="webwlsong">
+<meta property="og:description" content="起初一直在用云服务器来搭自用服务器，为什么还要用自建一个服务器？  云服务价格偏高性 性能达不到要求 IT人爱折腾，生命不止，学习不止   服务器选择  耗电量小 性价比高 噪声小(几乎没有噪声) 考虑过台式工作站服务器，NAS，最终选择mini电脑当自用服务器。   制作U盘Linux启动盘 推荐使用工具rufus(推荐),UltraISO(不太推荐) rufus做好启动盘之后，不需要修改卷标">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://static01.imgkr.com/temp/3ed79857352041c88cd07e5e2fa77697.png">
+<meta property="og:image" content="https://static01.imgkr.com/temp/58795ab06b954736ac04f3167e7a6290.jpg">
+<meta property="article:published_time" content="2020-08-31T09:09:00.000Z">
+<meta property="article:modified_time" content="2020-09-09T11:54:57.405Z">
+<meta property="article:author" content="webwlsong">
+<meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="frp">
+<meta property="article:tag" content="内网穿透">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://static01.imgkr.com/temp/3ed79857352041c88cd07e5e2fa77697.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://webwlsong.github.io/2020/08/31/2020/2020-08/2020-08-31/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="webwlsong" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="https://webwlsong-1301722012.cos.ap-shanghai.myqcloud.com/mweb/2020/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/webwlsong" target="_blank">
+          <img class="img-circle img-rotate" src="https://static01.imgkr.com/temp/e857da9acde846d4a09582984209f398.png" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">webwlsong</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> ShangHai, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/webwlsong" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/webwlsong" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/webwlsong" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/webwlsong" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/go/">go</a><span class="category-list-count">2</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/go/golang/">golang</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/go/%E5%86%85%E5%AD%98/">内存</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/go/%E5%86%85%E5%AD%98/%E5%A0%86%E6%A0%88/">堆栈</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/mono/">mono</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/nginx/">nginx</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/">小程序</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Electron/" rel="tag">Electron</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/QT/" rel="tag">QT</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/delve/" rel="tag">delve</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/" rel="tag">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fira/" rel="tag">fira</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/frp/" rel="tag">frp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/gitlab/" rel="tag">gitlab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/golang/" rel="tag">golang</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jetbrains/" rel="tag">jetbrains</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mongo/" rel="tag">mongo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mono/" rel="tag">mono</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nginx/" rel="tag">nginx</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/" rel="tag">nodejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/operator/" rel="tag">operator</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php-jit/" rel="tag">php-jit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php-mongo/" rel="tag">php-mongo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/phpstrom/" rel="tag">phpstrom</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pure/" rel="tag">pure</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pyenv/" rel="tag">pyenv</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swoole/" rel="tag">swoole</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tcp/" rel="tag">tcp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/" rel="tag">ubuntu</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98/" rel="tag">内存</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" rel="tag">内网穿透</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A0%86%E6%A0%88/" rel="tag">堆栈</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag">性能测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag">树莓派</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%B6%85%E6%97%B6/" rel="tag">超时</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/C/" style="font-size: 13px;">C++</a> <a href="/tags/Electron/" style="font-size: 13px;">Electron</a> <a href="/tags/Flutter/" style="font-size: 13px;">Flutter</a> <a href="/tags/PHP/" style="font-size: 13px;">PHP</a> <a href="/tags/QT/" style="font-size: 13px;">QT</a> <a href="/tags/c/" style="font-size: 13px;">c</a> <a href="/tags/c/" style="font-size: 13px;">c++</a> <a href="/tags/code/" style="font-size: 13px;">code</a> <a href="/tags/delve/" style="font-size: 13px;">delve</a> <a href="/tags/docker/" style="font-size: 13.5px;">docker</a> <a href="/tags/fira/" style="font-size: 13px;">fira</a> <a href="/tags/frp/" style="font-size: 13px;">frp</a> <a href="/tags/gitlab/" style="font-size: 13px;">gitlab</a> <a href="/tags/go/" style="font-size: 14px;">go</a> <a href="/tags/golang/" style="font-size: 13px;">golang</a> <a href="/tags/hexo/" style="font-size: 13px;">hexo</a> <a href="/tags/jetbrains/" style="font-size: 13px;">jetbrains</a> <a href="/tags/linux/" style="font-size: 13.5px;">linux</a> <a href="/tags/mongo/" style="font-size: 13px;">mongo</a> <a href="/tags/mono/" style="font-size: 13px;">mono</a> <a href="/tags/nginx/" style="font-size: 14px;">nginx</a> <a href="/tags/nodejs/" style="font-size: 13px;">nodejs</a> <a href="/tags/operator/" style="font-size: 13px;">operator</a> <a href="/tags/php/" style="font-size: 13.5px;">php</a> <a href="/tags/php-jit/" style="font-size: 13px;">php-jit</a> <a href="/tags/php-mongo/" style="font-size: 13px;">php-mongo</a> <a href="/tags/phpstrom/" style="font-size: 13px;">phpstrom</a> <a href="/tags/pure/" style="font-size: 13px;">pure</a> <a href="/tags/pyenv/" style="font-size: 13px;">pyenv</a> <a href="/tags/python/" style="font-size: 13px;">python</a> <a href="/tags/swoole/" style="font-size: 13px;">swoole</a> <a href="/tags/tcp/" style="font-size: 13px;">tcp</a> <a href="/tags/ubuntu/" style="font-size: 14px;">ubuntu</a> <a href="/tags/%E5%86%85%E5%AD%98/" style="font-size: 13px;">内存</a> <a href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" style="font-size: 13px;">内网穿透</a> <a href="/tags/%E5%A0%86%E6%A0%88/" style="font-size: 13px;">堆栈</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a> <a href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" style="font-size: 13px;">性能测试</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 13px;">架构</a> <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" style="font-size: 13px;">树莓派</a> <a href="/tags/%E8%B6%85%E6%97%B6/" style="font-size: 13px;">超时</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">二月 2021</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/02/06/2021/2021-02/2021-02-06/" class="title">桌面程序技术选型大厂使用技术以及优劣对比</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-05T16:00:00.000Z" itemprop="datePublished">2021-02-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/02/03/2021/2021-02/2021-02-03/" class="title">php Maximum execution time of 0 seconds exceeded</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-02-02T16:00:00.000Z" itemprop="datePublished">2021-02-03</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/">小程序</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/24/2020/2020-09/2020-09-24/" class="title">图解微信第三方开放平台流程图</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-23T16:00:00.000Z" itemprop="datePublished">2020-09-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/python/">python</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/18/2020/2020-09/2020-09-18/" class="title">pyenv的安装和简单使用（git、pyenv、pyenv-virtualenv）</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-17T16:00:00.000Z" itemprop="datePublished">2020-09-18</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/09/07/2020/2020-09/2020-09-07/" class="title">Mac用串口(ttl)连接树莓派3b+以及串口调试</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-09-06T16:00:00.000Z" itemprop="datePublished">2020-09-07</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-2020/2020-08/2020-08-31" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      DIY服务器搭建，内网穿透搭建
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/08/31/2020/2020-08/2020-08-31/" class="article-date">
+	  <time datetime="2020-08-31T09:09:00.000Z" itemprop="datePublished">2020-08-31</time>
+	</a>
+</span>
+        
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/frp/" rel="tag">frp</a>, <a class="article-tag-link-link" href="/tags/linux/" rel="tag">linux</a>, <a class="article-tag-link-link" href="/tags/ubuntu/" rel="tag">ubuntu</a>, <a class="article-tag-link-link" href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/" rel="tag">内网穿透</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/08/31/2020/2020-08/2020-08-31/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>起初一直在用云服务器来搭自用服务器，为什么还要用自建一个服务器？</p>
+<ul>
+<li>云服务价格偏高性</li>
+<li>性能达不到要求</li>
+<li>IT人爱折腾，生命不止，学习不止</li>
+</ul>
+<h2 id="服务器选择"><a class="markdownIt-Anchor" href="#服务器选择"></a> 服务器选择</h2>
+<ul>
+<li>耗电量小</li>
+<li>性价比高</li>
+<li>噪声小(几乎没有噪声)<br />
+考虑过台式工作站服务器，NAS，最终选择mini电脑当自用服务器。</li>
+</ul>
+<h2 id="制作u盘linux启动盘"><a class="markdownIt-Anchor" href="#制作u盘linux启动盘"></a> 制作U盘Linux启动盘</h2>
+<p>推荐使用工具rufus(推荐),UltraISO(不太推荐)<br />
+rufus做好启动盘之后，不需要修改卷标</p>
+<ul>
+<li>UltraIOS启动盘<br />
+U盘启动电脑进入安装界面</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vmlinuz  initrd&#x3D;initrd.img  inst.stage2&#x3D;hd:LABEL&#x3D;CentOS\x207\x20x86_64 rd.live.check quiet   </span><br><span class="line">#这是按 Tab 键后的默认值；</span><br></pre></td></tr></table></figure>
+<ul>
+<li>rufus 启动<br />
+<img src="https://static01.imgkr.com/temp/3ed79857352041c88cd07e5e2fa77697.png" alt="启动图片" /></li>
+</ul>
+<p>通常ubuntu桌面和显卡驱动不兼容，导致安装完整之后进入不到桌面<br />
+解决方法：<br />
+1:更换桌面管理器<br />
+2:进入tty 按ctrl+alt+f2</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install lightdm</span><br><span class="line">sudo service lightdm restart</span><br></pre></td></tr></table></figure>
+<p>默认启动多用户启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl set-default multi-user.target</span><br><span class="line">#然后输入reboot命令重启：</span><br></pre></td></tr></table></figure>
+<p>单次启动图形界面:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start graphical.target</span><br><span class="line">switchdesk GNOME&quot;,回车，再输入&quot;startx</span><br></pre></td></tr></table></figure>
+<p>默认启动为图形界面:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl set-default graphical.target</span><br><span class="line">#然后执行reboot命令重启系统即可。</span><br></pre></td></tr></table></figure>
+<h2 id="设置无线上网ubuntu20041是这个目录"><a class="markdownIt-Anchor" href="#设置无线上网ubuntu20041是这个目录"></a> 设置无线上网，Ubuntu20.04.1是这个目录</h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;netplan&#x2F;01-network-manager-all.yaml</span><br><span class="line">#添加</span><br><span class="line"> ethernets:</span><br><span class="line">          wlp1s0:   #配置的网卡的名称</span><br><span class="line">              dhcp4: no   #关闭DHCP，如果需要打开DHCP则写yes</span><br><span class="line">              dhcp6: no</span><br><span class="line">              addresses: [192.168.1.10&#x2F;24]   #配置的静态ip地址和掩码</span><br><span class="line">              gateway4: 192.168.1.1       #网关地址</span><br><span class="line">              nameservers:</span><br><span class="line">                   addresses: [192.168.1.1,114.114.114.114]  #DNS服务器地址，多个DNS服务器地址需要用英文逗号分隔开</span><br></pre></td></tr></table></figure>
+<p>使其ip生效</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo netplan apply</span><br></pre></td></tr></table></figure>
+<p>现在查看一下 IP是否生效</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip addr  或者 ifconfig</span><br></pre></td></tr></table></figure>
+<h2 id="frp内网穿透"><a class="markdownIt-Anchor" href="#frp内网穿透"></a> frp内网穿透</h2>
+<p>设备清单：</p>
+<ol>
+<li>一台云主机</li>
+<li>一台家用服务器</li>
+</ol>
+<p>frp 官方地址：<a target="_blank" rel="noopener" href="https://github.com/fatedier/frp/">https://github.com/fatedier/frp/</a><br />
+frp 中文文档：<a target="_blank" rel="noopener" href="https://github.com/fatedier/frp/blob/dev/README_zh.md">https://github.com/fatedier/frp/blob/dev/README_zh.md</a></p>
+<p>我这里使用的是第三方，frpMgr极速安装包：<br />
+<a target="_blank" rel="noopener" href="https://github.com/Zo3i/frpMgr">https://github.com/Zo3i/frpMgr</a><br />
+在云主机里面安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -O - https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Zo3i&#x2F;OCS&#x2F;master&#x2F;docker&#x2F;docker-all2.sh | sh</span><br><span class="line">wget -O - https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;Zo3i&#x2F;frpMgr&#x2F;master&#x2F;web&#x2F;src&#x2F;main&#x2F;docker&#x2F;final&#x2F;run.sh | sh</span><br></pre></td></tr></table></figure>
+<p>安装完成登陆：<br />
+注：代码仅在Centos7,Debian9系统上通过测试</p>
+<p>访问:你的服务器 ip:8999/frp 账号 admin 密码 12345678<br />
+查看日志命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. docker ps</span><br><span class="line">2. docker logs -f --tail 10 java项目的容器I</span><br></pre></td></tr></table></figure>
+<p>如果需要修改代码,请自行编译 jar包重新部署即可…</p>
+<p><img src="https://static01.imgkr.com/temp/58795ab06b954736ac04f3167e7a6290.jpg" alt="frp后台" /></p>
+<p>详细FRP快捷配置面板<br />
+<a target="_blank" rel="noopener" href="https://github.com/Zo3i/frpMgr/blob/master/README_zh.md">https://github.com/Zo3i/frpMgr/blob/master/README_zh.md</a></p>
+<p>启动，停止，重启frps服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">service frps status</span><br><span class="line">service frps stop</span><br><span class="line">service frps restart</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://webwlsong.github.io/2020/08/31/2020/2020-08/2020-08-31/" title="DIY服务器搭建，内网穿透搭建" target="_blank" rel="external">https://webwlsong.github.io/2020/08/31/2020/2020-08/2020-08-31/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/webwlsong" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="https://static01.imgkr.com/temp/e857da9acde846d4a09582984209f398.png" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/webwlsong" target="_blank"><span class="text-dark">webwlsong</span><small class="ml-1x">Developer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/09/03/2020/2020-09/2020-09-02/" title="图解Golang的内存管理分配"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/08/30/2020/2020-08/2020-08-30-1/" title="Ubuntu20.04.1关闭图形界面，使用tty登陆"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="https://webwlsong-1301722012.cos.ap-shanghai.myqcloud.com/mweb/2020/08/29/alipay.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="https://webwlsong-1301722012.cos.ap-shanghai.myqcloud.com/mweb/2020/08/29/wx_pay.jpg" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/webwlsong" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/webwlsong" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/webwlsong" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/webwlsong" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: 'ectr7l88yk7atjrzq1h0ptl10z5lck7psw1bvm0hxfio896h',
+    appKey: 'w1vhw2prhcgtuxero9gyhb0ie6apgyj6b1kv0e8rbkeg19jp',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
