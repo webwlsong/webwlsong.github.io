@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://webwlsong.github.io/"/>
-  <updated>2021-02-26T08:57:27.900Z</updated>
+  <updated>2021-03-10T09:19:13.382Z</updated>
   <id>https://webwlsong.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>OpenResty安装和lua-resty-http的使用</title>
+    <link href="https://webwlsong.github.io/2021/03/10/2021/2021-02/2021-03-10/"/>
+    <id>https://webwlsong.github.io/2021/03/10/2021/2021-02/2021-03-10/</id>
+    <published>2021-03-09T16:00:00.000Z</published>
+    <updated>2021-03-10T09:19:13.382Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="安装openresty"><a class="markdownIt-Anchor" href="#安装openresty"></a> 安装OpenResty</h1><ol><li><p>加入源</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum-config-manager --add-repo https:&#x2F;&#x2F;openresty.org&#x2F;package&#x2F;centos&#x2F;openresty.repo</span><br></pre></td></tr></table></figure></li><li><p>安装openresty</p></li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install openresty</span><br></pre></td></tr></table></figure><ol start="3"><li>安装LuaRock<br /><a href="https://luarocks.org/">luarock</a> 是一个lua modules包安装工具</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ wget https:&#x2F;&#x2F;luarocks.org&#x2F;releases&#x2F;luarocks-3.5.0.tar.gz</span><br><span class="line">$ tar zxpf luarocks-3.5.0.tar.gz</span><br><span class="line">$ cd luarocks-3.5.0</span><br><span class="line">$ .&#x2F;configure --prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;openresty&#x2F;luajit --with-lua&#x3D;&#x2F;usr&#x2F;local&#x2F;openresty&#x2F;luajit --lua-suffix&#x3D;jit --with-lua-include&#x3D;&#x2F;usr&#x2F;local&#x2F;openresty&#x2F;luajit&#x2F;include&#x2F;luajit-2.1 &amp;&amp; make &amp;&amp; sudo make install</span><br><span class="line">$ sudo luarocks install luasocket</span><br><span class="line">$ lua</span><br><span class="line">Lua 5.3.5 Copyright (C) 1994-2018 Lua.org, PUC-Rio</span><br><span class="line">&gt; require &quot;socket</span><br></pre></td></tr></table></figure><ol start="4"><li><p>OpenResty中使用lua-resty-http完成HTTP请求</p><p>lua-resty-http是OpenResty版本的Http客户端，基于cosocket实现<br />开源地址：<a href="https://github.com/ledgetech/lua-resty-http">https://github.com/ledgetech/lua-resty-http</a></p><p>4.1：安装依赖</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">luarocks install lua-resty-http</span><br></pre></td></tr></table></figure><p>代码示例<br />GET请求：</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">local http &#x3D; require(&#39;resty.http&#39;)</span><br><span class="line">local httpc &#x3D; http.new()</span><br><span class="line">local res, err &#x3D; httpc:request_uri(&#39;http:&#x2F;&#x2F;localhost&#x2F;hello&#39;, &#123;</span><br><span class="line">    keepalive_timeout &#x3D; 2000 -- 毫秒</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">if not res or res.status then</span><br><span class="line">    ngx.log(ngx.ERR, &quot;request error#&quot;, err)</span><br><span class="line">    return</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">ngx.log(ngx.ERR, &quot;request status#&quot;, res.status)</span><br><span class="line">ngx.say(res.body)</span><br></pre></td></tr></table></figure><p>POST请求：</p> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">local http &#x3D; require &quot;resty.http&quot;</span><br><span class="line">local httpc &#x3D; http.new()</span><br><span class="line">local res, err &#x3D; httpc:request_uri(&quot;http:&#x2F;&#x2F;localhost&#x2F;hello&quot;, &#123;</span><br><span class="line">  method &#x3D; &quot;POST&quot;,</span><br><span class="line">  body &#x3D; &quot;a&#x3D;1&amp;b&#x3D;2&quot;,</span><br><span class="line">  headers &#x3D; &#123;</span><br><span class="line">    [&quot;Content-Type&quot;] &#x3D; &quot;application&#x2F;x-www-form-urlencoded&quot;,</span><br><span class="line">  &#125;,</span><br><span class="line">  keepalive_timeout &#x3D; 60,</span><br><span class="line">  keepalive_pool &#x3D; 10</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">if not res or res.status then</span><br><span class="line">    ngx.log(ngx.ERR, &quot;request error#&quot;, err)</span><br><span class="line">    return</span><br><span class="line">end</span><br><span class="line"></span><br><span class="line">ngx.log(ngx.ERR, &quot;request status#&quot;, res.status)</span><br><span class="line">ngx.say(res.body)</span><br></pre></td></tr></table></figure></li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;安装openresty&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#安装openresty&quot;&gt;&lt;/a&gt; 安装OpenResty&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;加入源&lt;/p&gt;
+ &lt;figure class=&quot;highlight p
+      
+    
+    </summary>
+    
+    
+      <category term="OpenResty" scheme="https://webwlsong.github.io/tags/OpenResty/"/>
+    
+      <category term="lua" scheme="https://webwlsong.github.io/tags/lua/"/>
+    
+  </entry>
   
   <entry>
     <title>腾讯cdn命中率低，用户感觉cdn慢，从HTTP响应头看各家CDN缓存技术</title>
@@ -570,34 +599,6 @@ PHP7-JIT 相比 PHP5.6 提升 8 倍。&lt;/p&gt;
       <category term="ubuntu" scheme="https://webwlsong.github.io/tags/ubuntu/"/>
     
       <category term="docker" scheme="https://webwlsong.github.io/tags/docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>解决go delve 不能使用 OS X cannot get thread count</title>
-    <link href="https://webwlsong.github.io/2016/11/26/2016-11-26/"/>
-    <id>https://webwlsong.github.io/2016/11/26/2016-11-26/</id>
-    <published>2016-11-25T16:00:00.000Z</published>
-    <updated>2020-09-09T11:54:57.402Z</updated>
-    
-    <content type="html"><![CDATA[<p>go Delve 报错</p><p>mac 解决方法如下：<br />我的go版本 ：go version go1.7.3 darwin/amd64</p><p><a href="https://github.com/derekparker/delve/issues/645">https://github.com/derekparker/delve/issues/645</a><br />`</p><ol><li>go into your GOPATH</li><li>create folder $GOPATH/src/github.com/derekparker/, and go into this folder.</li><li>‘cd $GOPATH/src/github.com/derekparker/’</li><li>git clone <a href="https://github.com/derekparker/delve.git">https://github.com/derekparker/delve.git</a></li><li>cd delve</li><li>git fetch origin pull/665/head</li><li>git checkout FETCH_HEAD</li><li>CERT=dlv-cert make install<br />`</li></ol>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;go Delve 报错&lt;/p&gt;
-&lt;p&gt;mac 解决方法如下：&lt;br /&gt;
-我的go版本 ：go version go1.7.3 darwin/amd64&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;https://github.com/derekparker/delve/issues/
-      
-    
-    </summary>
-    
-    
-      <category term="go" scheme="https://webwlsong.github.io/tags/go/"/>
-    
-      <category term="delve" scheme="https://webwlsong.github.io/tags/delve/"/>
     
   </entry>
   
