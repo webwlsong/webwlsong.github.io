@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/03/17/jxU4YF51pdfakBZ.png">
 <meta property="og:image" content="https://i.loli.net/2021/03/17/3SdXZmgEzK6LkNw.png">
 <meta property="article:published_time" content="2021-03-16T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-03-17T06:06:26.203Z">
+<meta property="article:modified_time" content="2021-03-17T06:39:05.850Z">
 <meta property="article:author" content="webwlsong">
 <meta property="article:tag" content="Gitlab">
 <meta property="article:tag" content="gitlab-runner">
@@ -463,6 +463,13 @@
 <p>查看控制台<br />
 <img src="https://i.loli.net/2021/03/17/3SdXZmgEzK6LkNw.png" alt="" /><br />
 至此 Jenkins自动化构建完成</p>
+<h1 id="问题"><a class="markdownIt-Anchor" href="#问题"></a> 问题：</h1>
+<p>gitlab-runner sudo: no tty present and no askpass program specified 解决方法</p>
+<p>解决方法：<br />
+查看gitlab-runner 用户组和用户名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cat &#x2F;etc&#x2F;passwd  #查看用户名</span><br><span class="line">cat &#x2F;etc&#x2F;group  #查看用户组</span><br><span class="line"></span><br><span class="line">gitlab-runner:x:995:993:GitLab Runner:&#x2F;home&#x2F;gitlab-runner:&#x2F;bin&#x2F;bash</span><br><span class="line">其执行gitlab-runner 用户组和用户名:gitlab-runner</span><br></pre></td></tr></table></figure>
+<p>添加gitlab-runner 作为NOPASSWD登陆</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;sudoers</span><br><span class="line">root    ALL&#x3D;(ALL)       ALL</span><br><span class="line">gitlab-runner     ALL&#x3D;(ALL)     NOPASSWD: ALL</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h2>
 <ul>
 <li>[1] <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/df433633816b">GitLab自动化部署</a></li>
